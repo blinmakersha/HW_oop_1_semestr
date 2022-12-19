@@ -1,4 +1,5 @@
 from json import dumps
+import json
 
 
 class ErrorSyntax(Exception):
@@ -36,8 +37,8 @@ class Building:
         self.width = width
         self.name = name
         if not self.is_valid():
-            raise ErrorSyntax('К сожалению значения неверны, попробуйте еще раз.')
-        print('Данные об здании {} успешно добавлены в файл!'.format(name))
+            raise ErrorSyntax(
+                'К сожалению значения неверны, попробуйте еще раз.')
 
     def is_valid(self):
         """
@@ -58,6 +59,9 @@ class Building:
     def from_dict(cls, **kwargs):
         return cls(**kwargs)
 
+    def __str__(self) -> str:
+        return 'этажи : {0}, высота : {1}, ширина : {2}, название : {3}'.format(self.floors, self.height, self.width, self.name)
+
     def to_dict(self):
         return self.__dict__
 
@@ -69,20 +73,42 @@ def write_json(building):
     Args:
         building (list): the parameters of the building
     """
-    with open('{0}.json'.format(building.name), 'wt') as file:
-        data = dumps(building.to_dict())
+    data = read_json()
+    with open('all_buildings.json', 'wt') as file:
+        data['buildings'].append(building.to_dict())
+        data = dumps(data)
         file.write(data)
+    print('Данные об здании успешно добавлены в файл!')
+
+
+def read_json():
+    """
+    Reading info from file.json.
+
+    """
+    with open('all_buildings.json', 'rt') as file:
+        data_buildings = json.load(file)
+    if a == 2:
+        for i in data_buildings['buildings']:
+            print(Building.from_dict(**i))
+    return data_buildings
 
 
 q_fl = 'Введите количество этажей в здании: '
 q_h = 'Введите высоту здания: '
 q_w = 'Введите ширину здания: '
 q_n = 'Введите название здания: '
-try:
-    fl, hg, wg, nm = int(input(q_fl, )), int(input(q_h, )), int(input(q_w, )), input(q_n, )
-except Exception:
-    raise ErrorSyntax('К сожалению значения неверны, попробуйте еще раз.')
 
+print('Вы хотите записать здание или узнать какие здания есть? 1/2')
+a = int(input())
+if a == 1:
+    try:
+        fl, hg, wg, nm = int(input(q_fl, )), int(
+            input(q_h, )), int(input(q_w, )), input(q_n, )
+    except Exception:
+        raise ErrorSyntax('К сожалению значения неверны, попробуйте еще раз.')
+    building = Building(fl, hg, wg, nm)
+    write_json(building)
 
-building = Building(fl, hg, wg, nm)
-write_json(building)
+elif a == 2:
+    read_json()
