@@ -47,12 +47,8 @@ class Building:
         Returns:
             Boolean: False or True
         """
-        all_info = [self.floors, self.height, self.width]
-        for info in all_info:
-            if not isinstance(info, (int, float)):
-                return False
-            if self.floors < 1 or self.height < 1 or self.width < 1:
-                return False
+        if self.floors < 1 or self.height <= 0 or self.width <= 0:
+            return False
         return True
 
     @classmethod
@@ -103,8 +99,8 @@ print('Вы хотите записать здание или узнать ка�
 a = int(input())
 if a == 1:
     try:
-        fl, hg, wg, nm = int(input(q_fl, )), int(
-            input(q_h, )), int(input(q_w, )), input(q_n, )
+        fl, hg, wg, nm = int(input(q_fl, )), float(
+            input(q_h, )), float(input(q_w, )), input(q_n, )
     except Exception:
         raise ErrorSyntax('К сожалению значения неверны, попробуйте еще раз.')
     building = Building(fl, hg, wg, nm)
