@@ -14,8 +14,8 @@ class Barber:
     WAITING_TIME = 20
     WORKING_TIME = 3,6
 
-    def __init__(self, services: str):
-        self.services = services
+    def __init__(self):
+        # self.services = services
         self.client_coming = Event()
 
     def sleep(self):
@@ -37,10 +37,10 @@ class Barber:
 
 
 class HairSalon:
-    def __init__(self, services: str, q_size: int, lock: Lock):
+    def __init__(self, q_size: int, lock: Lock):
         self.q_size = q_size
         self.lock = lock
-        self.__worker = Barber(services)
+        self.__worker = Barber()
         self.__process = Process(target=self.work)
         self.__queue = Queue(maxsize=q_size)
 
@@ -90,7 +90,7 @@ if __name__ == '__main__':
     lock = Lock()
     names = [str(i) for i in range(5)]
     clients = [Client(name, choice(SERVICES)) for name in names]
-    hair_salon = HairSalon(SERVICES, SIZE_QUEUE, lock)
+    hair_salon = HairSalon(SIZE_QUEUE, lock)
     hair_salon.open()
     for client in clients:
         sleep(randint(*CLIENT_ENTER_INTERVAL))
