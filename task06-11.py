@@ -15,7 +15,6 @@ class Barber:
     WORKING_TIME = 3,6
 
     def __init__(self):
-        # self.services = services
         self.client_coming = Event()
 
     def sleep(self):
